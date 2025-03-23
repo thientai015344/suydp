@@ -149,10 +149,14 @@
     
         // New compliment button (giữ nguyên)
         function newCompliment() {
-            document.getElementById("playButton").style.display = "none";
+            const playButton = document.getElementById("playButton");
+            playButton.style.display = "none";
             messageElement.textContent = messages[Math.floor(Math.random() * messages.length)]; // Nút vẫn random
             document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             sound.play();
+            sound.onended = function() {
+                playButton.style.display = "block";
+            };
         }
     
         // Floating elements (giữ nguyên)
