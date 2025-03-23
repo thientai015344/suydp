@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            transition: background-color 0.8s;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        h1 {
+            font-size: 20px;
+            margin: 20px;
+            animation: glow 2s infinite alternate;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 25px;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        .slideshow {
+            width: 300px;
+            height: 400px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        .slideshow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .slideshow img.active {
+            display: block;
+        }
+        .floating {
+            position: absolute;
+            font-size: 2em;
+            animation: float 5s infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #fff, 0 0 20px #ff6f61; }
+            100% { text-shadow: 0 0 20px #fff, 0 0 30px #f9d56e; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="message">......</h1>
+        <div class="slideshow" id="slideshow"></div>
+        <button id="playButton" onclick="newCompliment()">mở nhạc</button>
+    </div>
+
+    <audio id="cheerSound" src="dbbt.mp3"></audio>
+
+    <script>
+        // Messages
+        const messages = [
+            "Pé Mây ơi, đừng có buồn nữa nhé, thấy em buồn là anh hỏng có chịu nổi",
+            "Cười lên nào, em cười đẹp lắm, tại sao lại cứ buồn vì những điều không đáng làm gì vậy!",
+            "Pé Mây buồn là bầu trời xám xịt theo đó, nên là vì thời tiết đẹp nên em đừng có buồn nha",
+            "Tự nhiên anh thấy anh vụng về, chỉ biết code cái này dỗ em thôi!",
+            "em buồn thì cứ tìm anh nè, anh không để em phải một mình đâu",
+            "Em mà buồn là anh chỉ muốn xuất hiện bên em làm gì đó cho em zui thôi (chưa có cơ hội)",
+            "Chắc giờ em đã ngủ rồi nhỉ, chúc em ngủ 🛌ngon ạ ",
+            "Mong sang ngày mới tâm trạng em sẽ tốt lên",
+            "anh cũng chỉ có vài dòng vậy thôi",
+            "Tuy anh khá là mới nên anh rất muốn được em chia sẽ nhiều hơn",
+            "để anh có thể hiểu em nhiều hơn nữa",
+            "và cuối cùng anh muốn nói là",
+            "..................",
+            "Pé Mây là đám mây quý nhất của anh",
+            "nên là",
+            "từ giờ có buồn hay có như nào thì hãy bảo anh với nhá :(("
+            ];
+    
+        // Colors
+        const colors = ["#ff6f61", "#6b5b95", "#88b04b", "#f7cac9", "#92a8d1", "#f9d56e", "#e06c9f"];
+    
+        // Image URLs (giữ nguyên từ code trước)
+        const images = [
+            "anh/1.jpg",
+            "anh/2.jpg",
+            "anh/3.jpg",
+            "anh/4.jpg"
+        ];
+    
+        // Initial setup
+        let currentImage = 0;
+        let currentMessage = 0; // Biến đếm cho messages
+        const slideshow = document.getElementById("slideshow");
+        const messageElement = document.getElementById("message");
+        const sound = document.getElementById("cheerSound");
+    
+        // Populate slideshow
+        images.forEach((src, index) => {
+            const img = document.createElement("img");
+            img.src = src;
+            if (index === 0) img.classList.add("active");
+            slideshow.appendChild(img);
+        });
+    
+        // Khởi tạo màu và câu đầu tiên
+        document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        messageElement.textContent = messages[currentMessage];
+    
+        // Lặp qua messages mỗi 5 giây
+        setInterval(() => {
+            currentMessage = (currentMessage + 1) % messages.length; // Tăng lên 1, quay lại 0 khi hết
+            messageElement.textContent = messages[currentMessage];
+        }, 5000); // 5000ms = 5 giây
+    
+        // Slideshow rotation (giữ nguyên)
+        setInterval(() => {
+            const imgs = slideshow.getElementsByTagName("img");
+            imgs[currentImage].classList.remove("active");
+            currentImage = (currentImage + 1) % images.length;
+            imgs[currentImage].classList.add("active");
+        }, 3000);
+    
+        // New compliment button (giữ nguyên)
+        function newCompliment() {
+            document.getElementById("playButton").style.display = "none";
+            messageElement.textContent = messages[Math.floor(Math.random() * messages.length)]; // Nút vẫn random
+            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            sound.play();
+        }
+    
+        // Floating elements (giữ nguyên)
+        function createFloat() {
+            const float = document.createElement("div");
+            float.classList.add("floating");
+            float.textContent = "✨";
+            float.style.left = Math.random() * 100 + "vw";
+            document.body.appendChild(float);
+            setTimeout(() => float.remove(), 5000);
+        }
+        setInterval(createFloat, 1000);
+    </script>
+</body>
+</html>
